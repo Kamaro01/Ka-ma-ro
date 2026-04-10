@@ -26,16 +26,16 @@ Thumbs.db
 # Vercel deployment
 .vercel/
 
-# Optional: if using TypeScript
+# TypeScript
 *.tsbuildinfo
 
-# Optional: if using testing tools
+# Testing
 coverage/
 jest-test-results.json
 
-# Optional: if using IDEs
+# IDEs
 .vscode/
 .idea/
 
-# Optional: if using TurboRepo or monorepo
+# Optional TurboRepo output
 turbo/
