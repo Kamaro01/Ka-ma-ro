@@ -5,8 +5,12 @@ import OpenAI from 'openai';
  * This should only be used on the server-side (API routes, Server Components).
  * @returns {OpenAI} Configured OpenAI client instance.
  */
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+export function getOpenAIClient(): OpenAI {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured.');
+  }
 
-export default openai;
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}

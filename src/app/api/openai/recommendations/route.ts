@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import openai from '@/lib/openai-client';
+import { getOpenAIClient } from '@/lib/openai-client';
 import { handleOpenAIError } from '@/lib/openai-error-handler';
 import { createClient } from '@/lib/supabase/client';
 import { ApiResponse, RecommendationRequest, RecommendationResponse } from '@/lib/types/openai';
@@ -71,7 +71,7 @@ Generate ${limit} product recommendations in the following JSON format:
 }`;
 
     // Call GPT-5 with structured output
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: 'gpt-5',
       messages: [
         { role: 'system', content: systemPrompt },

@@ -1,4 +1,4 @@
-import openai from '@/lib/openai-client';
+import { getOpenAIClient } from '@/lib/openai-client';
 import { handleOpenAIError } from '@/lib/openai-error-handler';
 import { ChatCompletionRequest } from '@/lib/types/openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
@@ -43,7 +43,7 @@ Be concise, professional, and proactive. Offer actionable suggestions and highli
 
     const enhancedMessages = [systemMessage, ...(messages as ChatCompletionMessageParam[])];
 
-    const stream = await openai.chat.completions.create({
+    const stream = await getOpenAIClient().chat.completions.create({
       model: 'gpt-5-mini',
       messages: enhancedMessages,
       stream: true,
