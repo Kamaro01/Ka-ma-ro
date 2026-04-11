@@ -26,6 +26,9 @@ Thumbs.db
 # Vercel deployment
 .vercel/
 
+# Local Codex workspace settings
+.codex/
+
 # TypeScript
 *.tsbuildinfo
 
