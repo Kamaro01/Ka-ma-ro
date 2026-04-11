@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import HamburgerMenu from './HamburgerMenu';
 
 export default function AppHeader() {
-  const pathname = usePathname();
+  const router = useRouter();
   const { itemCount } = useCart();
   const { isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,6 +21,12 @@ export default function AppHeader() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    router.push(query ? `/product-category-listing?q=${encodeURIComponent(query)}` : '/product-category-listing');
   };
 
   return (
@@ -36,9 +43,25 @@ export default function AppHeader() {
                 <Icon name="Bars3Icon" size={22} className="text-gray-700" />
               </button>
 
+              <form onSubmit={handleSearchSubmit} className="hidden sm:block relative">
+                <Icon
+                  name="MagnifyingGlassIcon"
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                />
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search products"
+                  className="h-10 w-44 md:w-64 rounded-md border border-gray-200 bg-white pl-9 pr-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                  aria-label="Search products"
+                />
+              </form>
+
               <Link
                 href="/product-category-listing"
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:bg-gray-100 rounded-md"
+                className="sm:hidden w-10 h-10 flex items-center justify-center transition-colors hover:bg-gray-100 rounded-md"
                 aria-label="Search products"
               >
                 <Icon name="MagnifyingGlassIcon" size={22} className="text-gray-700" />

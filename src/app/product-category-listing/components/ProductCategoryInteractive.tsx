@@ -31,6 +31,12 @@ const ProductCategoryInteractive: React.FC = () => {
   useEffect(() => {
     setIsHydrated(true);
     const savedCurrency = localStorage.getItem('currencySymbol') || '$';
+    const initialSearchQuery = new URLSearchParams(window.location.search).get('q');
+
+    if (initialSearchQuery) {
+      setSearchQuery(initialSearchQuery);
+    }
+
     setCurrencySymbol(savedCurrency);
   }, []);
 
@@ -177,8 +183,11 @@ const ProductCategoryInteractive: React.FC = () => {
     }
 
     if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        [product.name, product.category, product.alt].some((field) =>
+          field.toLowerCase().includes(query)
+        )
       );
     }
 
