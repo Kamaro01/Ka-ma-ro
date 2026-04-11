@@ -10,8 +10,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next.js with Tailwind CSS',
-  description: 'A boilerplate project with Next.js and Tailwind CSS',
+  title: {
+    default: 'Ka-ma-ro Official Store',
+    template: '%s | Ka-ma-ro',
+  },
+  description:
+    'Shop smartphones and accessories from Ka-ma-ro with MTN and Airtel mobile money checkout in Rwanda.',
   icons: {
     icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
   },

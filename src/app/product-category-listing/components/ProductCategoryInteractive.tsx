@@ -161,7 +161,7 @@ const ProductCategoryInteractive: React.FC = () => {
       name: 'Leather Wallet - MagSafe',
       price: 59.99,
       image: 'https://images.unsplash.com/photo-1643218231118-79c835f1322f',
-      alt: 'Brown leather MagSafe wallet holding credit cards attached to iPhone',
+      alt: 'Brown leather MagSafe wallet accessory attached to iPhone',
       category: 'accessories',
       inStock: true,
       featured: false,
