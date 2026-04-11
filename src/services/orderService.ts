@@ -56,7 +56,7 @@ export const orderService = {
       user_id: userId,
       transaction_ref: orderData.transactionRef,
       payment_method: orderData.paymentMethod,
-      order_status: 'confirmed',
+      order_status: 'pending',
       shipping_status: 'pending',
       subtotal: orderData.subtotal,
       tax: orderData.tax,

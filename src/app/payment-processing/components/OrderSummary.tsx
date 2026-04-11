@@ -7,6 +7,9 @@ interface CartItem {
   price: number;
   quantity: number;
   image?: string;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
 }
 
 interface OrderSummaryProps {
@@ -37,6 +40,11 @@ export default function OrderSummary({ items, subtotal, tax, total }: OrderSumma
             <div className="flex-1">
               <h3 className="font-medium text-gray-900">{item?.name}</h3>
               <p className="text-sm text-gray-600">Qty: {item?.quantity}</p>
+              {item?.partnerFulfillment && (
+                <p className="mt-1 text-xs text-blue-700">
+                  Partner item: {item.availabilityNote || 'availability confirmed after order'}
+                </p>
+              )}
             </div>
             <div className="text-right">
               <p className="font-medium text-gray-900">

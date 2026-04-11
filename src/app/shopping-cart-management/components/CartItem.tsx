@@ -12,6 +12,9 @@ interface CartItemProps {
   image: string;
   alt: string;
   currency: string;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
   onUpdateQuantity: (id: string, quantity: number) => void;
   onRemove: (id: string) => void;
   // Stock validation props
@@ -29,6 +32,9 @@ const CartItem = ({
   image,
   alt,
   currency,
+  partnerFulfillment,
+  supplierName,
+  availabilityNote,
   onUpdateQuantity,
   onRemove,
   currentStock,
@@ -101,6 +107,13 @@ const CartItem = ({
         <p className="font-data text-sm text-muted-foreground mb-2">
           {price.toLocaleString()} {currency}
         </p>
+
+        {partnerFulfillment && (
+          <div className="mb-3 rounded-md bg-blue-50 border border-blue-100 px-3 py-2 text-xs text-blue-800">
+            <p className="font-semibold">{supplierName || 'Partner stock'}</p>
+            <p>{availabilityNote || 'We confirm partner availability before delivery.'}</p>
+          </div>
+        )}
 
         {/* Stock Status Indicator */}
         {stockMessage && (

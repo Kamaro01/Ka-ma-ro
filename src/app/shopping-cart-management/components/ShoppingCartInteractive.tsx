@@ -42,8 +42,25 @@ const ShoppingCartInteractive = () => {
       return;
     }
 
+    const partnerItems = items.filter((item) => item.partnerFulfillment);
+    const stockManagedItems = items.filter((item) => !item.partnerFulfillment);
+
+    partnerItems.forEach((item) => {
+      updateItemStock(item.id, {
+        stockStatus: 'in_stock',
+        stockMessage: item.availabilityNote || 'Partner stock will be confirmed after order',
+        isAvailable: true,
+      });
+    });
+
+    if (stockManagedItems.length === 0) {
+      setCanCheckout(true);
+      setShowStockAlert(false);
+      return;
+    }
+
     setIsValidating(true);
-    const cartItems = items.map((item) => ({
+    const cartItems = stockManagedItems.map((item) => ({
       id: item.id,
       quantity: item.quantity,
     }));
@@ -72,7 +89,7 @@ const ShoppingCartInteractive = () => {
       });
 
       // Also update items with no issues to show stock availability
-      const itemsWithoutIssues = items.filter(
+      const itemsWithoutIssues = stockManagedItems.filter(
         (item) => !validation.issues.find((issue) => issue.productId === item.id)
       );
 
@@ -114,7 +131,9 @@ const ShoppingCartInteractive = () => {
   useEffect(() => {
     if (!isHydrated || items.length === 0) return;
 
-    const productIds = items.map((item) => item.id);
+    const productIds = items.filter((item) => !item.partnerFulfillment).map((item) => item.id);
+    if (productIds.length === 0) return;
+
     const subscription = inventoryValidationService.subscribeToStockUpdates(
       productIds,
       (payload) => {
@@ -259,6 +278,9 @@ const ShoppingCartInteractive = () => {
                 }
                 alt={`Product image of ${item.name}`}
                 currency={selectedCurrency.symbol}
+                partnerFulfillment={item.partnerFulfillment}
+                supplierName={item.supplierName}
+                availabilityNote={item.availabilityNote}
                 onUpdateQuantity={handleUpdateQuantity}
                 onRemove={handleRemoveItem}
                 currentStock={item.currentStock}

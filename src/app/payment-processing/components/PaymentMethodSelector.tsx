@@ -45,7 +45,8 @@ export default function PaymentMethodSelector({
       <h2 className="text-xl font-bold text-gray-900 mb-2">Select Payment Method</h2>
       <p className="text-sm text-gray-600 mb-6">
         📌 All orders require{' '}
-        <span className="font-semibold text-blue-600">30% advance payment</span> before processing
+        <span className="font-semibold text-blue-600">30% advance payment</span> before partner
+        stock confirmation and processing
       </p>
 
       {/* Manual Payment Methods */}
@@ -116,6 +117,7 @@ export default function PaymentMethodSelector({
             <ul className="text-xs text-yellow-800 space-y-1 list-disc list-inside">
               <li>Pay 30% of total amount as advance payment</li>
               <li>MTN Mobile Money and Airtel Money are the only checkout methods</li>
+              <li>We confirm partner stock before pickup or delivery</li>
               <li>Remaining 70% payable on delivery</li>
               <li>Order processing starts after advance payment confirmation</li>
               <li>Estimated delivery: 3-5 business days after payment</li>

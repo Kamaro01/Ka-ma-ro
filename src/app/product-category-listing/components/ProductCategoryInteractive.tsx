@@ -18,6 +18,9 @@ interface Product {
   inStock: boolean;
   featured: boolean;
   dateAdded: string;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
 }
 
 const ProductCategoryInteractive: React.FC = () => {
@@ -51,6 +54,9 @@ const ProductCategoryInteractive: React.FC = () => {
       inStock: true,
       featured: true,
       dateAdded: '2026-01-10',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '2',
@@ -62,6 +68,9 @@ const ProductCategoryInteractive: React.FC = () => {
       inStock: true,
       featured: true,
       dateAdded: '2026-01-09',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '3',
@@ -106,6 +115,9 @@ const ProductCategoryInteractive: React.FC = () => {
       inStock: true,
       featured: true,
       dateAdded: '2026-01-12',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '7',
@@ -117,6 +129,9 @@ const ProductCategoryInteractive: React.FC = () => {
       inStock: true,
       featured: true,
       dateAdded: '2026-01-11',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '8',
@@ -221,6 +236,10 @@ const ProductCategoryInteractive: React.FC = () => {
         price: product.price,
         quantity: 1,
         image: product.image,
+        partnerFulfillment: product.partnerFulfillment ?? true,
+        supplierName: product.supplierName || 'Ka-ma-ro partner shop',
+        availabilityNote:
+          product.availabilityNote || 'We confirm partner stock before pickup or delivery.',
       });
     }
   };
@@ -254,6 +273,14 @@ const ProductCategoryInteractive: React.FC = () => {
           }
           productCount={filteredAndSortedProducts.length}
         />
+
+        <div className="mb-6 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
+          <p className="font-semibold">Partner marketplace model</p>
+          <p className="mt-1">
+            Some items are supplied by trusted partner shops. You order here, we confirm stock with
+            the partner, then arrange pickup or delivery after your mobile money advance.
+          </p>
+        </div>
 
         <div className="mb-6">
           <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />

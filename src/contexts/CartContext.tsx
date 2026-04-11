@@ -9,6 +9,9 @@ export interface CartItem {
   price: number;
   image?: string;
   quantity: number;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
   maxStock?: number;
   // Stock validation fields
   currentStock?: number;

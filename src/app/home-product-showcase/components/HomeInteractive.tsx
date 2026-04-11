@@ -19,6 +19,9 @@ interface FeaturedProduct {
   image: string;
   alt: string;
   badge?: string;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
 }
 
 interface Product {
@@ -34,6 +37,9 @@ interface Product {
   reviewCount?: number;
   description?: string;
   launchDate?: string;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
 }
 
 interface Category {
@@ -92,6 +98,9 @@ export default function HomeInteractive() {
                 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400',
               alt: product.image_alt || `${product.name} product image`,
               inStock: product.stock_status !== 'out_of_stock',
+              partnerFulfillment: true,
+              supplierName: 'Ka-ma-ro partner shop',
+              availabilityNote: 'We confirm partner stock before pickup or delivery.',
             }))
           );
         }
@@ -151,6 +160,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_116019093-1765274487348.png',
       alt: 'JBL Clip 5 ultra-portable Bluetooth speaker with carabiner clip',
       badge: 'New Arrival',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '2',
@@ -159,6 +171,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_12a661698-1768154689180.png',
       alt: 'JBL Charge 6 portable waterproof Bluetooth speaker with power bank',
       badge: 'Best Seller',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '3',
@@ -167,6 +182,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_10fbfa88d-1768383436666.png',
       alt: 'S612W Smartbarry smartwatch with fitness tracking and notifications',
       badge: 'Great Value',
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
   ];
 
@@ -222,6 +240,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1a3e2552a-1766568154162.png',
       alt: 'JBL Flip 7 portable Bluetooth speaker with 360-degree sound',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '5',
@@ -230,6 +251,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_104f5c8a1-1766093795336.png',
       alt: 'JBL Onyx 9 premium wireless speaker with elegant circular design',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '6',
@@ -238,6 +262,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_17f0d2df1-1768383435971.png',
       alt: 'JBL Clip 4 compact Bluetooth speaker with integrated carabiner',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '7',
@@ -246,6 +273,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_116019093-1765274487348.png',
       alt: 'JBL Charge 5 portable waterproof speaker with built-in power bank',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '8',
@@ -254,6 +284,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1ea3d3eff-1768383435436.png',
       alt: 'JBL Onyx 8 premium wireless speaker with studio-quality sound',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '9',
@@ -262,6 +295,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_12a661698-1768154689180.png',
       alt: 'JBL Flip 6 portable Bluetooth speaker with IP67 waterproof rating',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '10',
@@ -270,6 +306,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_185f1d1ca-1766811196300.png',
       alt: 'Depin 20000mAh portable power bank with 12W fast charging technology',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '11',
@@ -278,6 +317,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1791c52da-1768383436034.png',
       alt: 'Depin 30000mAh high-capacity power bank with 12W fast charging',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '12',
@@ -286,6 +328,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_17fe09f80-1768383437033.png',
       alt: 'TWS Q17 true wireless stereo earbuds with charging case',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '13',
@@ -294,6 +339,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1301f61e9-1768383438161.png',
       alt: 'Compact pocket LED video light for smartphone photography and videography',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '14',
@@ -302,6 +350,9 @@ export default function HomeInteractive() {
       image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1003bbeff-1768383437558.png',
       alt: 'Apple 96W USB-C power adapter for MacBook Pro with cable',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
     {
       id: '15',
@@ -310,6 +361,9 @@ export default function HomeInteractive() {
       image: 'https://images.unsplash.com/photo-1662569074546-d99afa414862',
       alt: 'Premium leather phone case with card holder slots and magnetic closure',
       inStock: true,
+      partnerFulfillment: true,
+      supplierName: 'Ka-ma-ro partner shop',
+      availabilityNote: 'We confirm partner stock before pickup or delivery.',
     },
   ];
 
@@ -324,6 +378,10 @@ export default function HomeInteractive() {
         price: product.price,
         quantity: 1,
         image: product.image,
+        partnerFulfillment: product.partnerFulfillment ?? true,
+        supplierName: product.supplierName || 'Ka-ma-ro partner shop',
+        availabilityNote:
+          product.availabilityNote || 'We confirm partner stock before pickup or delivery.',
       });
     }
   };
@@ -384,7 +442,8 @@ export default function HomeInteractive() {
               Featured Products
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Handpicked selection of our most popular items, available now with fast shipping.
+              Handpicked items from Ka-ma-ro and trusted partner shops. We confirm partner stock
+              before pickup or delivery so you do not wait for unavailable products.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

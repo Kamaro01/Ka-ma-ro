@@ -12,6 +12,9 @@ interface Product {
   alt: string;
   category: string;
   inStock: boolean;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
 }
 
 interface ProductCardProps {
@@ -46,6 +49,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, currencySymbol, onAd
         <h3 className="font-body font-medium text-base text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
           {product.name}
         </h3>
+
+        {product.partnerFulfillment && (
+          <div className="mb-3 rounded-md bg-blue-50 border border-blue-100 px-3 py-2 text-xs text-blue-800">
+            <p className="font-semibold">Partner stock</p>
+            <p>{product.availabilityNote || 'Availability confirmed after order request.'}</p>
+          </div>
+        )}
 
         <p className="font-semibold text-lg text-gray-900 mb-3">
           {currencySymbol}

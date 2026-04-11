@@ -13,6 +13,9 @@ interface ProductCardProps {
   alt: string;
   currencyCode: string;
   inStock: boolean;
+  partnerFulfillment?: boolean;
+  supplierName?: string;
+  availabilityNote?: string;
   onAddToCart: (id: string) => void;
 }
 
@@ -24,6 +27,8 @@ export default function ProductCard({
   alt,
   currencyCode,
   inStock,
+  partnerFulfillment,
+  availabilityNote,
   onAddToCart,
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
@@ -51,6 +56,13 @@ export default function ProductCard({
         <h3 className="font-body font-medium text-base text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
           {name}
         </h3>
+
+        {partnerFulfillment && (
+          <div className="mb-3 rounded-md bg-blue-50 border border-blue-100 px-3 py-2 text-xs text-blue-800">
+            <p className="font-semibold">Partner stock</p>
+            <p>{availabilityNote || 'Availability confirmed after order request.'}</p>
+          </div>
+        )}
 
         <div className="flex items-center justify-between mb-3">
           <span className="font-semibold text-lg text-gray-900">
