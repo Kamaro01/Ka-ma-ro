@@ -14,7 +14,7 @@ const paymentMethods = [
     name: 'MTN Mobile Money',
     type: 'mobile_money',
     logo: '📱',
-    description: 'Submit your MTN number so we can request the 30% advance',
+    description: 'Enter the MTN number you will pay from, then send the advance to Ka-ma-ro',
     color: 'bg-yellow-50 border-yellow-200',
   },
   {
@@ -34,13 +34,16 @@ const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) 
   if (methodId === 'mtn') {
     const ussdCode = `*182*1*1*${MTN_PAYMENT_NUMBER}*${advancePaymentAmount}#`;
     return {
-      receiver: `MTN number: ${MTN_PAYMENT_NUMBER}`,
+      receiver: `Ka-ma-ro receives payment on: ${MTN_PAYMENT_NUMBER}`,
+      amount: `${advancePaymentAmount.toLocaleString()} RWF`,
       ussdCode,
       dialHref: `tel:${ussdCode.replace('#', '%23')}`,
       steps: [
-        `Dial ${ussdCode}`,
-        'Enter your MTN Mobile Money PIN/password.',
-        'Choose YES to confirm the payment.',
+        'Enter your own MTN number in the box below, for example 078xxxxxxx.',
+        `Send ${advancePaymentAmount.toLocaleString()} RWF to ${MTN_PAYMENT_NUMBER}.`,
+        `Dial ${ussdCode}, or tap the payment-code button on your phone.`,
+        'Your phone will ask for your MTN Mobile Money PIN/password.',
+        'Choose YES to confirm and finish the payment yourself.',
         'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
       ],
     };
@@ -109,6 +112,24 @@ export default function PaymentMethodSelector({
                     <p className="mb-2">{selectedPaymentInstructions.receiver}</p>
                     {selectedPaymentInstructions.ussdCode && (
                       <div className="mb-3 rounded-md bg-white/70 p-3">
+                        <div className="mb-3 grid gap-2 sm:grid-cols-2">
+                          <div>
+                            <p className="text-xs uppercase tracking-wide opacity-80">
+                              Customer pays from
+                            </p>
+                            <p className="font-semibold">Their own MTN number</p>
+                          </div>
+                          <div>
+                            <p className="text-xs uppercase tracking-wide opacity-80">
+                              Ka-ma-ro receives
+                            </p>
+                            <p className="font-semibold">{MTN_PAYMENT_NUMBER}</p>
+                          </div>
+                        </div>
+                        <p className="text-xs uppercase tracking-wide opacity-80">Advance amount</p>
+                        <p className="mb-3 text-lg font-bold">
+                          {selectedPaymentInstructions.amount}
+                        </p>
                         <p className="text-xs uppercase tracking-wide opacity-80">Payment code</p>
                         <p className="font-mono font-semibold break-all">
                           {selectedPaymentInstructions.ussdCode}
@@ -138,17 +159,17 @@ export default function PaymentMethodSelector({
       {selectedMethod && (
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Your Mobile Money Phone Number
+            Your MTN Number Paying From
           </label>
           <input
             type="tel"
             value={phoneNumber}
             onChange={(e) => onPhoneNumberChange(e.target.value)}
-            placeholder="07XX XXX XXX"
+            placeholder="Eg: 078xxxxxxx"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="text-xs text-gray-600 mt-2">
-            We&apos;ll use this number to confirm the order and request the advance payment
+            This is the number you will use to confirm the MTN payment with your PIN/password.
           </p>
         </div>
       )}
@@ -162,8 +183,8 @@ export default function PaymentMethodSelector({
             <ul className="text-xs text-yellow-800 space-y-1 list-disc list-inside">
               <li>Pay 30% of total amount as advance payment</li>
               <li>No card payment is taken on the website</li>
-              <li>MTN customers can use the shown USSD code to send the advance payment</li>
-              <li>We will contact you if we need extra confirmation before processing</li>
+              <li>Customer enters their own MTN number, then confirms payment on their phone</li>
+              <li>Ka-ma-ro receives MTN payments on 0788812376</li>
               <li>MTN Mobile Money is the main checkout method</li>
               <li>More payment options can be added later without changing the checkout flow</li>
               <li>We confirm partner stock before pickup or delivery</li>

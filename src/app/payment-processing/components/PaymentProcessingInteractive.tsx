@@ -118,8 +118,8 @@ export default function PaymentProcessingInteractive() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Complete Your Order</h1>
       <p className="text-gray-600 mb-8">
-        Mobile money only: MTN or Airtel. Submit your number, then we request the 30% advance and
-        confirm the remaining 70% on delivery.
+        MTN Mobile Money is active now. Enter the number you will pay from, send the 30% advance to
+        Ka-ma-ro, then pay the remaining 70% on delivery.
       </p>
 
       {error && (
@@ -202,13 +202,12 @@ export default function PaymentProcessingInteractive() {
                 Processing Order...
               </span>
             ) : (
-              `Submit Order - Request ${advancePaymentRWF.toLocaleString()} RWF Advance`
+              `Submit Order - Pay ${advancePaymentRWF.toLocaleString()} RWF Advance by MTN`
             )}
           </button>
 
           <p className="text-center text-sm text-gray-600 mt-4">
-            By submitting, you agree that we can contact you or send a mobile money request before
-            order processing
+            By submitting, you agree to complete the MTN advance payment before order processing
           </p>
         </div>
       </div>
