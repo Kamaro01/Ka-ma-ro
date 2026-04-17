@@ -19,11 +19,12 @@ const paymentMethods = [
   },
   {
     id: 'airtel',
-    name: 'Airtel Money',
+    name: 'More Payment Options',
     type: 'mobile_money',
-    logo: '📲',
-    description: 'Optional: submit your Airtel number and we will contact you',
-    color: 'bg-red-50 border-red-200',
+    logo: '➕',
+    description: 'Coming soon: Airtel, bank transfer, merchant code, or other options can be added here',
+    color: 'bg-gray-50 border-gray-200',
+    disabled: true,
   },
 ];
 
@@ -40,20 +41,6 @@ const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) 
         `Dial ${ussdCode}`,
         'Enter your MTN Mobile Money PIN/password.',
         'Choose YES to confirm the payment.',
-        'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
-      ],
-    };
-  }
-
-  if (methodId === 'airtel') {
-    return {
-      receiver: 'Airtel is optional and handled manually by Ka-ma-ro.',
-      ussdCode: '',
-      dialHref: '',
-      steps: [
-        'Submit your Airtel Money number with the order.',
-        'Ka-ma-ro will contact you before requesting any Airtel payment.',
-        'If Airtel is not available for your order, we will help you complete payment by MTN instead.',
         'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
       ],
     };
@@ -85,11 +72,18 @@ export default function PaymentMethodSelector({
         {paymentMethods.map((method) => (
           <button
             key={method.id}
-            onClick={() => onSelectMethod(method.id)}
+            onClick={() => {
+              if (!method.disabled) {
+                onSelectMethod(method.id);
+              }
+            }}
+            disabled={method.disabled}
             className={`w-full p-5 border-2 rounded-lg transition-all text-left ${
               selectedMethod === method.id
                 ? 'border-blue-600 bg-blue-50 shadow-md'
-                : `${method.color} hover:border-gray-400 hover:shadow-sm`
+                : method.disabled
+                  ? `${method.color} cursor-not-allowed opacity-70`
+                  : `${method.color} hover:border-gray-400 hover:shadow-sm`
             }`}
           >
             <div className="flex items-start gap-4">
@@ -97,6 +91,11 @@ export default function PaymentMethodSelector({
               <div className="flex-1">
                 <p className="font-semibold text-gray-900 text-lg">{method.name}</p>
                 <p className="text-sm text-gray-600 mt-1">{method.description}</p>
+                {method.disabled && (
+                  <p className="mt-2 inline-flex rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700">
+                    Reserved for future payment methods
+                  </p>
+                )}
 
                 {selectedMethod === method.id && selectedPaymentInstructions && (
                   <div
@@ -166,7 +165,7 @@ export default function PaymentMethodSelector({
               <li>MTN customers can use the shown USSD code to send the advance payment</li>
               <li>We will contact you if we need extra confirmation before processing</li>
               <li>MTN Mobile Money is the main checkout method</li>
-              <li>Airtel Money is optional and confirmed manually before payment</li>
+              <li>More payment options can be added later without changing the checkout flow</li>
               <li>We confirm partner stock before pickup or delivery</li>
               <li>Remaining 70% payable on delivery</li>
               <li>Order processing starts after advance payment confirmation</li>
