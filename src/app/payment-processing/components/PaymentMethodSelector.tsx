@@ -5,6 +5,7 @@ interface PaymentMethodSelectorProps {
   onSelectMethod: (method: string) => void;
   phoneNumber: string;
   onPhoneNumberChange: (phone: string) => void;
+  advancePaymentAmount: number;
 }
 
 const paymentMethods = [
@@ -13,33 +14,63 @@ const paymentMethods = [
     name: 'MTN Mobile Money',
     type: 'mobile_money',
     logo: '📱',
-    description: 'Pay your 30% advance with MTN MoMo',
+    description: 'Submit your MTN number so we can request the 30% advance',
     color: 'bg-yellow-50 border-yellow-200',
-    instructions: [
-      'Use your MTN Mobile Money number for payment confirmation.',
-      'We will contact you to complete the advance payment request.',
-    ],
   },
   {
     id: 'airtel',
     name: 'Airtel Money',
     type: 'mobile_money',
     logo: '📲',
-    description: 'Pay your 30% advance with Airtel Money',
+    description: 'Optional: submit your Airtel number and we will contact you',
     color: 'bg-red-50 border-red-200',
-    instructions: [
-      'Use your Airtel Money number for payment confirmation.',
-      'We will contact you to complete the advance payment request.',
-    ],
   },
 ];
+
+const MTN_PAYMENT_NUMBER = '0788812376';
+
+const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) => {
+  if (methodId === 'mtn') {
+    const ussdCode = `*182*1*1*${MTN_PAYMENT_NUMBER}*${advancePaymentAmount}#`;
+    return {
+      receiver: `MTN number: ${MTN_PAYMENT_NUMBER}`,
+      ussdCode,
+      dialHref: `tel:${ussdCode.replace('#', '%23')}`,
+      steps: [
+        `Dial ${ussdCode}`,
+        'Enter your MTN Mobile Money PIN/password.',
+        'Choose YES to confirm the payment.',
+        'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
+      ],
+    };
+  }
+
+  if (methodId === 'airtel') {
+    return {
+      receiver: 'Airtel is optional and handled manually by Ka-ma-ro.',
+      ussdCode: '',
+      dialHref: '',
+      steps: [
+        'Submit your Airtel Money number with the order.',
+        'Ka-ma-ro will contact you before requesting any Airtel payment.',
+        'If Airtel is not available for your order, we will help you complete payment by MTN instead.',
+        'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
+      ],
+    };
+  }
+
+  return null;
+};
 
 export default function PaymentMethodSelector({
   selectedMethod,
   onSelectMethod,
   phoneNumber,
   onPhoneNumberChange,
+  advancePaymentAmount,
 }: PaymentMethodSelectorProps) {
+  const selectedPaymentInstructions = getPaymentInstructions(selectedMethod, advancePaymentAmount);
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-2">Select Payment Method</h2>
@@ -67,7 +98,7 @@ export default function PaymentMethodSelector({
                 <p className="font-semibold text-gray-900 text-lg">{method.name}</p>
                 <p className="text-sm text-gray-600 mt-1">{method.description}</p>
 
-                {selectedMethod === method.id && method.instructions && (
+                {selectedMethod === method.id && selectedPaymentInstructions && (
                   <div
                     className={`mt-4 rounded-lg p-4 text-sm ${
                       method.id === 'mtn'
@@ -76,8 +107,23 @@ export default function PaymentMethodSelector({
                     }`}
                   >
                     <p className="font-medium mb-2">How it works</p>
+                    <p className="mb-2">{selectedPaymentInstructions.receiver}</p>
+                    {selectedPaymentInstructions.ussdCode && (
+                      <div className="mb-3 rounded-md bg-white/70 p-3">
+                        <p className="text-xs uppercase tracking-wide opacity-80">Payment code</p>
+                        <p className="font-mono font-semibold break-all">
+                          {selectedPaymentInstructions.ussdCode}
+                        </p>
+                        <a
+                          href={selectedPaymentInstructions.dialHref}
+                          className="mt-2 inline-flex rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
+                        >
+                          Call MTN payment code
+                        </a>
+                      </div>
+                    )}
                     <ul className="space-y-1 list-disc list-inside">
-                      {method.instructions.map((instruction) => (
+                      {selectedPaymentInstructions.steps.map((instruction) => (
                         <li key={instruction}>{instruction}</li>
                       ))}
                     </ul>
@@ -93,7 +139,7 @@ export default function PaymentMethodSelector({
       {selectedMethod && (
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Your Phone Number (for order confirmation)
+            Your Mobile Money Phone Number
           </label>
           <input
             type="tel"
@@ -103,7 +149,7 @@ export default function PaymentMethodSelector({
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="text-xs text-gray-600 mt-2">
-            We&apos;ll contact you on this number to confirm your order and payment
+            We&apos;ll use this number to confirm the order and request the advance payment
           </p>
         </div>
       )}
@@ -116,7 +162,11 @@ export default function PaymentMethodSelector({
             <p className="text-sm font-medium text-yellow-900 mb-1">Important Payment Terms:</p>
             <ul className="text-xs text-yellow-800 space-y-1 list-disc list-inside">
               <li>Pay 30% of total amount as advance payment</li>
-              <li>MTN Mobile Money and Airtel Money are the only checkout methods</li>
+              <li>No card payment is taken on the website</li>
+              <li>MTN customers can use the shown USSD code to send the advance payment</li>
+              <li>We will contact you if we need extra confirmation before processing</li>
+              <li>MTN Mobile Money is the main checkout method</li>
+              <li>Airtel Money is optional and confirmed manually before payment</li>
               <li>We confirm partner stock before pickup or delivery</li>
               <li>Remaining 70% payable on delivery</li>
               <li>Order processing starts after advance payment confirmation</li>
