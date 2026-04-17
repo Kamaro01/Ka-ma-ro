@@ -32,18 +32,14 @@ const MTN_PAYMENT_NUMBER = '0788812376';
 
 const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) => {
   if (methodId === 'mtn') {
-    const ussdCode = `*182*1*1*${MTN_PAYMENT_NUMBER}*${advancePaymentAmount}#`;
     return {
-      receiver: `Ka-ma-ro receives payment on: ${MTN_PAYMENT_NUMBER}`,
+      receiver: MTN_PAYMENT_NUMBER,
       amount: `${advancePaymentAmount.toLocaleString()} RWF`,
-      ussdCode,
-      dialHref: `tel:${ussdCode.replace('#', '%23')}`,
       steps: [
         'Enter your own MTN number in the box below, for example 078xxxxxxx.',
-        `Send ${advancePaymentAmount.toLocaleString()} RWF to ${MTN_PAYMENT_NUMBER}.`,
-        `Dial ${ussdCode}, or tap the payment-code button on your phone.`,
-        'Your phone will ask for your MTN Mobile Money PIN/password.',
-        'Choose YES to confirm and finish the payment yourself.',
+        `Use your phone to send ${advancePaymentAmount.toLocaleString()} RWF to Ka-ma-ro.`,
+        'MTN will send you a confirmation screen or message on your phone.',
+        'Enter your MTN Mobile Money PIN/password and choose YES to finish the payment.',
         'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
       ],
     };
@@ -109,39 +105,24 @@ export default function PaymentMethodSelector({
                     }`}
                   >
                     <p className="font-medium mb-2">How it works</p>
-                    <p className="mb-2">{selectedPaymentInstructions.receiver}</p>
-                    {selectedPaymentInstructions.ussdCode && (
-                      <div className="mb-3 rounded-md bg-white/70 p-3">
-                        <div className="mb-3 grid gap-2 sm:grid-cols-2">
-                          <div>
-                            <p className="text-xs uppercase tracking-wide opacity-80">
-                              Customer pays from
-                            </p>
-                            <p className="font-semibold">Their own MTN number</p>
-                          </div>
-                          <div>
-                            <p className="text-xs uppercase tracking-wide opacity-80">
-                              Ka-ma-ro receives
-                            </p>
-                            <p className="font-semibold">{MTN_PAYMENT_NUMBER}</p>
-                          </div>
+                    <div className="mb-3 rounded-md bg-white/70 p-3">
+                      <div className="mb-3 grid gap-2 sm:grid-cols-2">
+                        <div>
+                          <p className="text-xs uppercase tracking-wide opacity-80">
+                            Customer number
+                          </p>
+                          <p className="font-semibold">{phoneNumber || 'Eg: 078xxxxxxx'}</p>
                         </div>
-                        <p className="text-xs uppercase tracking-wide opacity-80">Advance amount</p>
-                        <p className="mb-3 text-lg font-bold">
-                          {selectedPaymentInstructions.amount}
-                        </p>
-                        <p className="text-xs uppercase tracking-wide opacity-80">Payment code</p>
-                        <p className="font-mono font-semibold break-all">
-                          {selectedPaymentInstructions.ussdCode}
-                        </p>
-                        <a
-                          href={selectedPaymentInstructions.dialHref}
-                          className="mt-2 inline-flex rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
-                        >
-                          Call MTN payment code
-                        </a>
+                        <div>
+                          <p className="text-xs uppercase tracking-wide opacity-80">
+                            Ka-ma-ro receives
+                          </p>
+                          <p className="font-semibold">{selectedPaymentInstructions.receiver}</p>
+                        </div>
                       </div>
-                    )}
+                      <p className="text-xs uppercase tracking-wide opacity-80">Advance amount</p>
+                      <p className="text-lg font-bold">{selectedPaymentInstructions.amount}</p>
+                    </div>
                     <ul className="space-y-1 list-disc list-inside">
                       {selectedPaymentInstructions.steps.map((instruction) => (
                         <li key={instruction}>{instruction}</li>
