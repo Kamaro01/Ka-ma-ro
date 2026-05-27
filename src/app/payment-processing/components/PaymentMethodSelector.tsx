@@ -29,12 +29,12 @@ const paymentMethods = [
   },
 ];
 
-const MTN_PAYMENT_NUMBER = '0788812376';
+const MTN_PAYMENT_RECEIVER = 'Ka-ma-ro';
 
 const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) => {
   if (methodId === 'mtn') {
     return {
-      receiver: MTN_PAYMENT_NUMBER,
+      receiver: MTN_PAYMENT_RECEIVER,
       amount: `${advancePaymentAmount.toLocaleString()} RWF`,
       steps: [
         'Enter your own MTN number in the box below, for example 078xxxxxxx.',
@@ -191,7 +191,7 @@ export default function PaymentMethodSelector({
               <li>Pay 30% of total amount as advance payment</li>
               <li>No card payment is taken on the website</li>
               <li>Customer enters their own MTN number, then confirms payment on their phone</li>
-              <li>Ka-ma-ro receives MTN payments on 0788812376</li>
+              <li>Ka-ma-ro is shown as the payment receiver</li>
               <li>MTN Mobile Money is the main checkout method</li>
               <li>More payment options can be added later without changing the checkout flow</li>
               <li>We confirm partner stock before pickup or delivery</li>
