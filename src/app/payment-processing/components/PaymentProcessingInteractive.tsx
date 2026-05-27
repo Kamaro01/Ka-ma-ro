@@ -9,7 +9,6 @@ import OrderSummary from './OrderSummary';
 import PaymentMethodSelector from './PaymentMethodSelector';
 import SecurityIndicators from './SecurityIndicators';
 import { orderService, CreateOrderData } from '@/services/orderService';
-import { supabase } from '@/lib/supabase/client';
 
 export default function PaymentProcessingInteractive() {
   const router = useRouter();
@@ -36,15 +35,8 @@ export default function PaymentProcessingInteractive() {
   const finalTotalRWF = totalRWF + shippingRWF;
   const advancePaymentRWF = Math.ceil(finalTotalRWF * ADVANCE_PERCENTAGE);
   const remainingPaymentRWF = finalTotalRWF - advancePaymentRWF;
-  const requiresLogin = !authLoading && !user;
 
   const handlePayment = async () => {
-    if (requiresLogin) {
-      setError('Please sign in first so we can create and track your order.');
-      router.push('/login?next=/payment-processing');
-      return;
-    }
-
     if (!selectedMethod) {
       setError('Please select a payment method');
       return;
@@ -98,6 +90,46 @@ export default function PaymentProcessingInteractive() {
         remainingPayment: remainingPaymentRWF,
       };
 
+      if (!user) {
+        const guestOrderNumber = `KMR-${Date.now().toString().slice(-8)}`;
+        const guestOrder = {
+          id: `guest-${Date.now()}`,
+          order_number: guestOrderNumber,
+          user_id: null,
+          transaction_ref: orderData.transactionRef,
+          payment_method: orderData.paymentMethod,
+          order_status: 'pending',
+          shipping_status: 'pending',
+          subtotal: orderData.subtotal,
+          tax: orderData.tax,
+          shipping_cost: orderData.shippingCost,
+          total: orderData.total,
+          shipping_address: orderData.shippingAddress,
+          estimated_delivery: orderData.estimatedDelivery,
+          created_at: new Date().toISOString(),
+          tracking_number: null,
+          carrier: null,
+          items: orderData.items.map((item, index) => ({
+            id: `guest-item-${index}`,
+            order_id: `guest-${Date.now()}`,
+            product_name: item.productName,
+            product_image: item.productImage,
+            quantity: item.quantity,
+            unit_price: item.unitPrice,
+            total_price: item.unitPrice * item.quantity,
+          })),
+          statusHistory: [],
+        };
+
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(`kamaro_guest_order_${guestOrderNumber}`, JSON.stringify(guestOrder));
+        }
+
+        clearCart();
+        router.push(`/order-confirmation?order=${guestOrderNumber}&manual=true&guest=1`);
+        return;
+      }
+
       // Create order in database
       const order = await orderService.createOrder(user!.id, orderData);
 
@@ -127,19 +159,13 @@ export default function PaymentProcessingInteractive() {
         </div>
       )}
 
-      {requiresLogin && (
+      {!authLoading && !user && (
         <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <p className="font-medium text-amber-900">Sign in required before checkout</p>
+          <p className="font-medium text-amber-900">Guest checkout is active</p>
           <p className="mt-1 text-sm text-amber-800">
-            Please sign in so Ka-ma-ro can save your order, payment status, and delivery updates.
+            You can submit this order without signing in. If you sign in later, Ka-ma-ro can track
+            more order history inside your account.
           </p>
-          <button
-            type="button"
-            onClick={() => router.push('/login?next=/payment-processing')}
-            className="mt-3 inline-flex rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700"
-          >
-            Sign in to continue
-          </button>
         </div>
       )}
 
@@ -189,9 +215,9 @@ export default function PaymentProcessingInteractive() {
           {/* Submit Order Button */}
           <button
             onClick={handlePayment}
-            disabled={!selectedMethod || !phoneNumber || processing || requiresLogin}
+            disabled={!selectedMethod || !phoneNumber || processing}
             className={`mt-6 w-full py-4 rounded-lg font-bold text-lg transition-all ${
-              !selectedMethod || !phoneNumber || processing || requiresLogin
+              !selectedMethod || !phoneNumber || processing
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
             }`}

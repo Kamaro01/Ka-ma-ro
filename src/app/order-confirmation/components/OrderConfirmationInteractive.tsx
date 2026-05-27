@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, Package, Truck, Download, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import AppImage from '@/components/ui/AppImage';
 import { orderService, OrderWithItems } from '@/services/orderService';
@@ -32,6 +32,7 @@ export default function OrderConfirmationInteractive({
   orderNumber,
 }: OrderConfirmationInteractiveProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -49,6 +50,17 @@ export default function OrderConfirmationInteractive({
     try {
       setLoading(true);
       setError('');
+
+      const isGuestOrder = searchParams?.get('guest') === '1';
+
+      if (isGuestOrder && typeof window !== 'undefined') {
+        const storedGuestOrder = window.localStorage.getItem(`kamaro_guest_order_${orderNumber}`);
+
+        if (storedGuestOrder) {
+          setOrder(JSON.parse(storedGuestOrder));
+          return;
+        }
+      }
 
       const orderData = await orderService.getOrderByNumber(orderNumber);
 
@@ -225,7 +237,7 @@ export default function OrderConfirmationInteractive({
                 <span>{order.shipping_cost.toLocaleString()} RWF</span>
               </div>
               <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t border-gray-300">
-                <span>Total Paid</span>
+                <span>Total Order Value</span>
                 <span className="text-green-600">{order.total.toLocaleString()} RWF</span>
               </div>
             </div>
@@ -284,10 +296,10 @@ export default function OrderConfirmationInteractive({
             <div className="flex items-start gap-3">
               <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="font-semibold text-blue-900 mb-2">Confirmation Email Sent</h3>
+                <h3 className="font-semibold text-blue-900 mb-2">Order Confirmation Saved</h3>
                 <p className="text-sm text-blue-800">
-                  A detailed order confirmation has been sent to your registered email address.
-                  Please check your inbox and spam folder.
+                  Keep your order number and payment proof. Ka-ma-ro will use this information to
+                  confirm your order and delivery details.
                 </p>
               </div>
             </div>
@@ -305,10 +317,10 @@ export default function OrderConfirmationInteractive({
                 Download Receipt
               </button>
               <button
-                onClick={() => router.push('/user-account-dashboard')}
+                onClick={() => router.push('/home-product-showcase')}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
               >
-                View Order Details
+                Return to Store
               </button>
               <button
                 onClick={() => router.push('/home-product-showcase')}
