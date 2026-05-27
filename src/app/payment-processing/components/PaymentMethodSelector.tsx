@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { paymentSettings } from '@/lib/payment-settings';
 
 interface PaymentMethodSelectorProps {
   selectedMethod: string;
@@ -29,19 +30,18 @@ const paymentMethods = [
   },
 ];
 
-const MTN_PAYMENT_RECEIVER = 'Ka-ma-ro';
-
 const getPaymentInstructions = (methodId: string, advancePaymentAmount: number) => {
   if (methodId === 'mtn') {
     return {
-      receiver: MTN_PAYMENT_RECEIVER,
+      receiver: paymentSettings.mtn.receiverName,
       amount: `${advancePaymentAmount.toLocaleString()} RWF`,
+      qrImagePath: paymentSettings.mtn.qrImagePath,
       steps: [
         'Enter your own MTN number in the box below, for example 078xxxxxxx.',
-        `Use your phone to send ${advancePaymentAmount.toLocaleString()} RWF to Ka-ma-ro.`,
+        `Use your phone to send ${advancePaymentAmount.toLocaleString()} RWF to ${paymentSettings.mtn.receiverName}.`,
         'MTN will send you a confirmation screen or message on your phone.',
         'Enter your MTN Mobile Money PIN/password and choose YES to finish the payment.',
-        'Your order stays pending until Ka-ma-ro confirms the mobile money payment.',
+        `Your order stays pending until ${paymentSettings.mtn.receiverName} confirms the mobile money payment.`,
       ],
     };
   }
@@ -130,8 +130,8 @@ export default function PaymentMethodSelector({
                       </p>
                       <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:items-start">
                         <Image
-                          src="/assets/qr-code-design.svg"
-                          alt="QR code for Ka-ma-ro payment"
+                          src={selectedPaymentInstructions.qrImagePath}
+                          alt={`QR code for ${selectedPaymentInstructions.receiver} payment`}
                           width={160}
                           height={160}
                           className="rounded-md border border-gray-200 bg-white"
@@ -148,6 +148,20 @@ export default function PaymentMethodSelector({
                           </p>
                         </div>
                       </div>
+                    </div>
+                    <div className="mb-3 rounded-md border border-blue-200 bg-blue-50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                        {paymentSettings.marketing.badge}
+                      </p>
+                      <p className="mt-1 font-semibold text-blue-950">
+                        {paymentSettings.marketing.headline}
+                      </p>
+                      <p className="mt-1 text-xs text-blue-900">
+                        {paymentSettings.marketing.message}
+                      </p>
+                      <p className="mt-2 text-[11px] text-blue-700">
+                        {paymentSettings.marketing.footer}
+                      </p>
                     </div>
                     <ul className="space-y-1 list-disc list-inside">
                       {selectedPaymentInstructions.steps.map((instruction) => (
@@ -191,7 +205,7 @@ export default function PaymentMethodSelector({
               <li>Pay 30% of total amount as advance payment</li>
               <li>No card payment is taken on the website</li>
               <li>Customer enters their own MTN number, then confirms payment on their phone</li>
-              <li>Ka-ma-ro is shown as the payment receiver</li>
+              <li>{paymentSettings.mtn.receiverName} is shown as the payment receiver</li>
               <li>MTN Mobile Money is the main checkout method</li>
               <li>More payment options can be added later without changing the checkout flow</li>
               <li>We confirm partner stock before pickup or delivery</li>
