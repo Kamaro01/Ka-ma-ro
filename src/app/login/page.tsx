@@ -1,23 +1,25 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { signIn, user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const nextPath = searchParams?.get('next') || '/home-product-showcase';
 
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
-      router?.push('/home-product-showcase');
+      router?.push(nextPath);
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, nextPath]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -31,7 +33,7 @@ export default function LoginPage() {
         setError(signInError);
         setLoading(false);
       } else {
-        router?.push('/home-product-showcase');
+        router?.push(nextPath);
       }
     } catch {
       setError('An unexpected error occurred. Please try again.');
@@ -78,6 +80,11 @@ export default function LoginPage() {
               create a new account
             </Link>
           </p>
+          {nextPath === '/payment-processing' && (
+            <p className="mt-2 text-center text-sm text-amber-700">
+              Sign in to continue with your payment and order confirmation.
+            </p>
+          )}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

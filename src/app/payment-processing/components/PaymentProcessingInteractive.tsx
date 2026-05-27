@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { convertCurrency } from '@/utils/currencyConverter';
 import OrderSummary from './OrderSummary';
 import PaymentMethodSelector from './PaymentMethodSelector';
@@ -13,6 +14,7 @@ import { supabase } from '@/lib/supabase/client';
 export default function PaymentProcessingInteractive() {
   const router = useRouter();
   const { items, totalAmount, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
   const [selectedMethod, setSelectedMethod] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [processing, setProcessing] = useState(false);
@@ -34,8 +36,15 @@ export default function PaymentProcessingInteractive() {
   const finalTotalRWF = totalRWF + shippingRWF;
   const advancePaymentRWF = Math.ceil(finalTotalRWF * ADVANCE_PERCENTAGE);
   const remainingPaymentRWF = finalTotalRWF - advancePaymentRWF;
+  const requiresLogin = !authLoading && !user;
 
   const handlePayment = async () => {
+    if (requiresLogin) {
+      setError('Please sign in first so we can create and track your order.');
+      router.push('/login?next=/payment-processing');
+      return;
+    }
+
     if (!selectedMethod) {
       setError('Please select a payment method');
       return;
@@ -62,16 +71,6 @@ export default function PaymentProcessingInteractive() {
         return;
       }
 
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        setError('You must be logged in to complete your order');
-        return;
-      }
-
       // Prepare order data with mobile money payment status
       const orderData: CreateOrderData = {
         transactionRef: `MANUAL-${Date.now()}-${Math.random().toString(36).substring(7).toUpperCase()}`,
@@ -87,7 +86,7 @@ export default function PaymentProcessingInteractive() {
         shippingCost: shippingRWF,
         total: finalTotalRWF,
         shippingAddress: {
-          name: user.user_metadata?.full_name || 'Customer Name',
+          name: user?.user_metadata?.full_name || 'Customer Name',
           street: 'Address will be confirmed',
           city: 'Kigali',
           country: 'Rwanda',
@@ -100,7 +99,7 @@ export default function PaymentProcessingInteractive() {
       };
 
       // Create order in database
-      const order = await orderService.createOrder(user.id, orderData);
+      const order = await orderService.createOrder(user!.id, orderData);
 
       // Clear cart after successful order creation
       clearCart();
@@ -125,6 +124,22 @@ export default function PaymentProcessingInteractive() {
       {error && (
         <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      {requiresLogin && (
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <p className="font-medium text-amber-900">Sign in required before checkout</p>
+          <p className="mt-1 text-sm text-amber-800">
+            Please sign in so Ka-ma-ro can save your order, payment status, and delivery updates.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push('/login?next=/payment-processing')}
+            className="mt-3 inline-flex rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700"
+          >
+            Sign in to continue
+          </button>
         </div>
       )}
 
@@ -174,9 +189,9 @@ export default function PaymentProcessingInteractive() {
           {/* Submit Order Button */}
           <button
             onClick={handlePayment}
-            disabled={!selectedMethod || !phoneNumber || processing}
+            disabled={!selectedMethod || !phoneNumber || processing || requiresLogin}
             className={`mt-6 w-full py-4 rounded-lg font-bold text-lg transition-all ${
-              !selectedMethod || !phoneNumber || processing
+              !selectedMethod || !phoneNumber || processing || requiresLogin
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
             }`}
