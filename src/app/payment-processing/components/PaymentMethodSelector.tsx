@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface PaymentMethodSelectorProps {
   selectedMethod: string;
@@ -122,6 +123,31 @@ export default function PaymentMethodSelector({
                       </div>
                       <p className="text-xs uppercase tracking-wide opacity-80">Advance amount</p>
                       <p className="text-lg font-bold">{selectedPaymentInstructions.amount}</p>
+                    </div>
+                    <div className="mb-3 rounded-md border border-yellow-300 bg-white/80 p-3">
+                      <p className="text-xs uppercase tracking-wide opacity-80">
+                        Optional QR payment
+                      </p>
+                      <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:items-start">
+                        <Image
+                          src="/assets/qr-code-design.svg"
+                          alt="QR code for Ka-ma-ro payment"
+                          width={160}
+                          height={160}
+                          className="rounded-md border border-gray-200 bg-white"
+                        />
+                        <div className="space-y-1">
+                          <p className="font-semibold text-gray-900">Scan to pay if supported</p>
+                          <p className="text-xs text-gray-700">
+                            If your MTN app or wallet supports QR payment, you can scan this code
+                            instead of typing payment details manually.
+                          </p>
+                          <p className="text-xs text-gray-700">
+                            If scanning does not work on your phone, use the number and amount shown
+                            above.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                     <ul className="space-y-1 list-disc list-inside">
                       {selectedPaymentInstructions.steps.map((instruction) => (
