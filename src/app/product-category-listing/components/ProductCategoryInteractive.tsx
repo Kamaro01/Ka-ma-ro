@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import CategoryHeader from './CategoryHeader';
 import SearchBar from './SearchBar';
@@ -280,6 +281,12 @@ const ProductCategoryInteractive: React.FC = () => {
             Some items are supplied by trusted partner shops. You order here, we confirm stock with
             the partner, then arrange pickup or delivery after your mobile money advance.
           </p>
+          <Link
+            href="/request-a-product"
+            className="mt-3 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+          >
+            Can&apos;t find it? Request it for sourcing
+          </Link>
         </div>
 
         <div className="mb-6">
@@ -305,6 +312,24 @@ const ProductCategoryInteractive: React.FC = () => {
           currencySymbol={currencySymbol}
           onAddToCart={handleAddToCart}
         />
+
+        {filteredAndSortedProducts.length === 0 && (
+          <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center">
+            <p className="text-lg font-semibold text-amber-900">
+              We did not find that item in the catalog.
+            </p>
+            <p className="mt-2 text-sm text-amber-800">
+              Send us the product name, budget, or link and Ka-ma-ro can source it as broker from
+              trusted partner shops.
+            </p>
+            <Link
+              href={`/request-a-product${searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : ''}`}
+              className="mt-4 inline-flex rounded-xl bg-amber-600 px-5 py-3 font-semibold text-white hover:bg-amber-700"
+            >
+              Request this product
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

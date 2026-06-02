@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { supabase } from '@/lib/supabase/client';
 import HeroCarousel from './HeroCarousel';
@@ -445,6 +446,17 @@ export default function HomeInteractive() {
               Handpicked items from Ka-ma-ro and trusted partner shops. We confirm partner stock
               before pickup or delivery so you do not wait for unavailable products.
             </p>
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <p className="text-sm text-slate-600">
+                Need something not listed in the store yet?
+              </p>
+              <Link
+                href="/request-a-product"
+                className="inline-flex rounded-xl bg-amber-600 px-5 py-3 font-semibold text-white hover:bg-amber-700"
+              >
+                Request a Product We Can Source
+              </Link>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {allProducts.map((product) => (
